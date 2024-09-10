@@ -29,7 +29,11 @@ func (h *Handler) CreateUser(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(response)
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"request":  request,
+		"response": response,
+		"_message": "request received!",
+	})
 }
 
 func (h *Handler) Login(c *fiber.Ctx) error {
@@ -61,7 +65,11 @@ func (h *Handler) Login(c *fiber.Ctx) error {
 		HTTPOnly: true,
 	})
 
-	return c.Status(fiber.StatusOK).JSON(user)
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"request":  request,
+		"response": user,
+		"_message": "request received!",
+	})
 }
 
 func (h *Handler) Logout(c *fiber.Ctx) error {
