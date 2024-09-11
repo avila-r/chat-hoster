@@ -21,3 +21,21 @@ db-drop:
 db-delete:
 	docker stop $(container_name) || true
 	docker rm $(container_name) || true
+
+db-start:
+	@if [ "`docker ps -aq -f name=$(container_name)`" ]; then \
+		echo "Iniciando o container $(container_name)..."; \
+		docker start $(container_name); \
+		echo "Container $(container_name) iniciado com sucesso."; \
+	else \
+		echo "Container $(container_name) não existe. Por favor, crie o container primeiro."; \
+	fi
+
+db-stop:
+	@if [ "`docker ps -q -f name=$(container_name)`" ]; then \
+		echo "Parando o container $(container_name)..."; \
+		docker stop $(container_name); \
+		echo "Container $(container_name) parado com sucesso."; \
+	else \
+		echo "O container $(container_name) já está parado ou não existe."; \
+	fi
