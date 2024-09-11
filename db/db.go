@@ -5,6 +5,7 @@ import (
 	"os"
 	"sync"
 
+	"github.com/avila-r/chat-hoster/internal/users"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -33,5 +34,5 @@ func GetConnection() *gorm.DB {
 }
 
 func AutoMigrate(db *gorm.DB) {
-	_ = db.AutoMigrate()
+	_ = db.AutoMigrate(&users.User{})
 }
