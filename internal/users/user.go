@@ -12,13 +12,13 @@ type User struct {
 }
 
 type LoginRequest struct {
-	Login    string `json:"login"`
+	Email    string `json:"login"`
 	Password string `json:"password"`
 }
 
 type LoginResponse struct {
 	Token    string `json:"token"`
-	ID       int64  `json:"id"`
+	ID       string  `json:"id"`
 	Username string `json:"username"`
 }
 
