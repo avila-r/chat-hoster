@@ -29,11 +29,7 @@ func (h *Handler) CreateUser(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"request":  request,
-		"response": response,
-		"_message": "request received!",
-	})
+	return c.Status(fiber.StatusOK).JSON(response)
 }
 
 func (h *Handler) Login(c *fiber.Ctx) error {
@@ -47,7 +43,7 @@ func (h *Handler) Login(c *fiber.Ctx) error {
 		})
 	}
 
-	user, err := h.service.Login(&request)
+	login, err := h.service.Login(&request)
 
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -57,7 +53,7 @@ func (h *Handler) Login(c *fiber.Ctx) error {
 
 	c.Cookie(&fiber.Cookie{
 		Name:     "jwt",
-		Value:    user.Token,
+		Value:    login.Token,
 		MaxAge:   60 * 60 * 24,
 		Path:     "/",
 		Domain:   "localhost",
@@ -65,11 +61,7 @@ func (h *Handler) Login(c *fiber.Ctx) error {
 		HTTPOnly: true,
 	})
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"request":  request,
-		"response": user,
-		"_message": "request received!",
-	})
+	return c.Status(fiber.StatusOK).JSON(login)
 }
 
 func (h *Handler) Logout(c *fiber.Ctx) error {
