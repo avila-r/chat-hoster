@@ -2,9 +2,11 @@ package users
 
 import (
 	"errors"
+	"os"
 	"strconv"
 	"time"
 
+	"github.com/avila-r/chat-hoster/internal/auth"
 	"github.com/golang-jwt/jwt/v4"
 )
 
@@ -17,10 +19,16 @@ func NewService(r Repository) *Service {
 }
 
 func (s *Service) Register(r *RegisterRequest) (*RegisterResponse, error) {
+	hash, err := auth.EncryptPassword(r.Password)
+
+	if err != nil {
+		return nil, err
+	}
+
 	u := &User{
 		Username: r.Username,
 		Email:    r.Email,
-		Password: r.Password,
+		Password: hash,
 	}
 
 	if _, err := s.r.FindUserByEmail(u.Email); err == nil {
@@ -50,7 +58,7 @@ func (s *Service) Login(r *LoginRequest) (*LoginResponse, error) {
 		return nil, err
 	}
 
-	err = errors.New("check password here")
+	err = auth.CheckPassword(r.Password, user.Password)
 
 	if err != nil {
 		return nil, err
@@ -74,7 +82,11 @@ func (s *Service) Login(r *LoginRequest) (*LoginResponse, error) {
 		},
 	})
 
-	token, err := t.SignedString([]byte("secret here"))
+	var (
+		secret = os.Getenv("a")
+	)
+
+	token, err := t.SignedString([]byte(secret))
 
 	if err != nil {
 		return nil, err
